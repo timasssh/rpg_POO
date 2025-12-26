@@ -13,6 +13,7 @@ public abstract class Character {
 	private int maxManaPoints;
 	private boolean fullLife;
 	private boolean fullMana;
+	private String name;
 
 	// combat specific info
 	protected float shield;
@@ -93,8 +94,16 @@ public abstract class Character {
 	public void setAttack(Attack attack) {
 		this.attack = attack;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-	protected Character(int maxLifePoints, int maxManaPoints, int shield, int dodgeChance, String weapon, int magicalAbility) {
+	protected Character(String name, int maxLifePoints, int maxManaPoints, int shield, int dodgeChance, String weapon, int magicalAbility) {
+		this.name = name;
+		
 		this.maxLifePoints = maxLifePoints >= 0f ? maxLifePoints : 0f;
 		this.lifePoints = maxLifePoints;
 		
