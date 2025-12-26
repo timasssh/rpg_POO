@@ -101,7 +101,7 @@ public abstract class Character {
 		this.name = name;
 	}
 
-	protected Character(String name, int maxLifePoints, int maxManaPoints, int shield, int dodgeChance, String weapon, int magicalAbility) {
+	protected Character(String name, int maxLifePoints, int maxManaPoints, int shield, int dodgeChance, String weapon) {
 		this.name = name;
 		
 		this.maxLifePoints = maxLifePoints >= 0f ? maxLifePoints : 0f;
