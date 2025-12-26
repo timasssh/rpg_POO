@@ -1,31 +1,15 @@
 package rpg_POO;
 
-import java.util.Random;
-
 public class Warrior extends Character{
 
-	public Warrior(int maxLifePoints, int maxManaPoints, String characterType) {
-		super(maxLifePoints, maxManaPoints, characterType);
-		this.setShield(90);
-		this.setDodgeChance(20);
+	public Warrior() {
+		super(40, 30, 80, 10, "long-sword", 5);
+		
+		Attack attack = new Attack(60f + this.getMagicalAbility(), 10 + this.getMagicalAbility(), "long-sword");
+		this.setAttack(attack);
 	}
 	
-	public void attack() {
-		if(this.drainMana()) {
-			System.out.println("Attacking...");
-			return;
-		}
-	}
-	public void defend() {
-		System.out.println("Defending...");
-	}
-	public void dodge() {
-		Random dodgeDecision = new Random();
-		if(dodgeDecision.nextInt(100) <= this.getDodgeChance()) {
-			System.out.println("Dodging the attack...");
-			return;
-		}
-		
-		System.out.println("Dodge failed!");
+	public void taunt() {
+		System.out.println("* brandishing them wielded sword *");
 	}
 }

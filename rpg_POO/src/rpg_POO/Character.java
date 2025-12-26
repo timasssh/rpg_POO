@@ -1,21 +1,30 @@
 package rpg_POO;
 
+import java.util.Random;
+
 public abstract class Character {
-	private int maxLifePoints;
-	private int lifePoints;
+	// stats
+	private float lifePoints;
 	private int manaPoints;
+	private boolean alive;
+
+	// character characteristic
+	private float maxLifePoints;
 	private int maxManaPoints;
-	protected int shield;
-	protected int dodgeChance;
 	private boolean fullLife;
 	private boolean fullMana;
-	private String characterType;
-	private boolean alive;
-	
-	public int getLifePoints() {
+
+	// combat specific info
+	protected float shield;
+	protected int dodgeChance;
+	private String weapon;
+	private int magicalAbility;
+	private Attack attack;
+
+	public float getLifePoints() {
 		return lifePoints;
 	}
-	public void setLifePoints(int lifePoints) {
+	public void setLifePoints(float lifePoints) {
 		this.lifePoints = lifePoints;
 	}
 	public int getManaPoints() {
@@ -30,10 +39,10 @@ public abstract class Character {
 	public void setAlive(boolean livingStituation) {
 		this.alive = livingStituation;
 	}
-	public int getMaxLifePoints() {
+	public float getMaxLifePoints() {
 		return maxLifePoints;
 	}
-	public void setMaxLifePoints(int maxLifePoints) {
+	public void setMaxLifePoints(float maxLifePoints) {
 		this.maxLifePoints = maxLifePoints;
 	}
 	public int getMaxManaPoints() {
@@ -48,16 +57,10 @@ public abstract class Character {
 	public void setFullLife(boolean fullLife) {
 		this.fullLife = fullLife;
 	}
-	public String getCharacterType() {
-		return characterType;
-	}
-	public void setCharacterType(String characterType) {
-		this.characterType = characterType;
-	}
-	public int getShield() {
+	public float getShield() {
 		return shield;
 	}
-	protected void setShield(int shield) {
+	protected void setShield(float shield) {
 		this.shield = shield;
 	}
 	public boolean isFullMana() {
@@ -72,20 +75,54 @@ public abstract class Character {
 	protected void setDodgeChance(int dodgeChance) {
 		this.dodgeChance = dodgeChance;
 	}
-	
-	protected Character(int maxLifePoints, int maxManaPoints, String characterType) {
-		this.maxLifePoints = maxLifePoints;
+	public String getWeapon() {
+		return weapon;
+	}
+	public void setWeapon(String weapon) {
+		this.weapon = weapon;
+	}
+	public int getMagicalAbility() {
+		return magicalAbility;
+	}
+	public void setMagicalAbility(int magicalAbility) {
+		this.magicalAbility = magicalAbility;
+	}
+	public Attack getAttack() {
+		return attack;
+	}
+	public void setAttack(Attack attack) {
+		this.attack = attack;
+	}
+
+	protected Character(int maxLifePoints, int maxManaPoints, int shield, int dodgeChance, String weapon, int magicalAbility) {
+		this.maxLifePoints = maxLifePoints >= 0f ? maxLifePoints : 0f;
 		this.lifePoints = maxLifePoints;
 		
-		this.maxManaPoints = maxManaPoints;
+		this.maxManaPoints = maxManaPoints >= 0 ? maxManaPoints : 0;
 		this.manaPoints = maxManaPoints;
 		
-		this.shield = 0;
-		this.dodgeChance = 0;
+		this.shield = shield >= 0 ? shield : 0;
+		this.dodgeChance = dodgeChance >= 0 ? dodgeChance : 0;
 		this.fullLife = true;
 		this.fullMana = true;
-		this.characterType = characterType;
-		this.alive = true;
+		this.alive = this.lifePoints > 0f ? true : false;
+		this.weapon = weapon;
+		
+		if(this.maxManaPoints <= 10) {
+			this.magicalAbility = 10;
+		}else if(this.maxManaPoints <= 20) {
+			this.magicalAbility = 25;
+		}else if(this.maxManaPoints <= 40) {
+			this.magicalAbility = 45;
+		}else if(this.maxManaPoints <= 60) {
+			this.magicalAbility = 65;
+		}else if(this.maxManaPoints <= 80) {
+			this.magicalAbility = 90;
+		}else if(this.maxManaPoints <= 90) {
+			this.magicalAbility = 100; 
+		}else if(this.maxManaPoints <= 100) {
+			this.magicalAbility = 120;
+		}
 	}
 	
 	public void die() {
@@ -95,7 +132,7 @@ public abstract class Character {
 		}
 		
 		this.setAlive(false);
-		this.setLifePoints(0);
+		this.setLifePoints(0f);
 		
 		System.out.println("This character died!");
 	}
@@ -106,7 +143,7 @@ public abstract class Character {
 		}
 		
 		this.setAlive(true);
-		this.setLifePoints(1);
+		this.setLifePoints(1f);
 		
 		System.out.println("This character has been ressurected!");
 	}
@@ -117,23 +154,23 @@ public abstract class Character {
 			return;
 		}
 		
-		this.setLifePoints(this.getLifePoints() - 1);
-		if(this.getLifePoints() <= 0) {
+		this.setLifePoints(this.getLifePoints() - 1f);
+		if(this.getLifePoints() <= 0f) {
 			this.die();
 		}
 	}
-	public void hurt(int damage) {
+	public void hurt(float damage) {
 		if(!this.isAlive()) {
 			System.err.println("Character is already dead!");
 			return;
 		}
-		if(damage < 0) {
+		if(damage < 0f) {
 			System.err.println("Invalid damage!");
 			return;
 		}
 		
 		this.setLifePoints(this.getLifePoints() - damage);
-		if(this.getLifePoints() <= 0) {
+		if(this.getLifePoints() <= 0f) {
 			this.die();
 		}
 	}
@@ -148,12 +185,12 @@ public abstract class Character {
 			return;
 		}
 		
-		this.setLifePoints(this.getLifePoints() + 1);
+		this.setLifePoints(this.getLifePoints() + 1f);
 		if(this.isFullLife()) {
 			this.setFullLife(true);
 		}
 	}
-	public void heal(int healingValue) {
+	public void heal(float healingValue) {
 		if(!this.isAlive()) {
 			System.err.println("This character is dead!");
 			return;
@@ -203,7 +240,7 @@ public abstract class Character {
 		
 		return true;
 	}
-	public void absorveManaint() {
+	public void absorveMana() {
 		if(this.isFullMana()) {
 			System.err.println("This character is already full of mana!");
 			return;
@@ -216,7 +253,7 @@ public abstract class Character {
 			this.setFullMana(true);
 		}
 	}
-	public void absorveManaint(int absorvingValue) {
+	public void absorveMana(int absorvingValue) {
 		if(this.isFullMana()) {
 			System.err.println("This character is already full of mana!");
 			return;
@@ -234,7 +271,31 @@ public abstract class Character {
 		}
 	}
 	
-	public abstract void attack();
-	public abstract void defend();
-	public abstract void dodge();
+	public void attack() {
+		if(this.drainMana(this.getAttack().getManaCost())) {
+			System.out.println("Attacking... dealing " + this.getAttack().getDamage() + " damage");
+			return;
+		}
+		
+		System.err.println("Insuficient mana...");
+	}
+	public void defend(Attack attack) {
+		float defendedDamage = attack.getDamage() * (this.getShield() / 100);
+		
+		this.hurt(attack.getDamage() - defendedDamage);
+		
+		System.out.println("Defended damage: " + defendedDamage);
+	}
+	public void dodge(Attack attack) {
+		Random dodgeDecision = new Random();
+		if(dodgeDecision.nextInt(101) <= this.getDodgeChance()) {
+			System.out.println("Dodging the attack...");
+			return;
+		}
+		
+		System.err.println("Dodge failed!");
+		this.hurt(attack.getDamage());
+	}
+	
+	public abstract void taunt();
 }
